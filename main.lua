@@ -10,6 +10,9 @@ function _init()
 	minutes_display = 0
 	seconds_display = 0
 	milliseconds_display = 0
+	
+	p_x = 63
+	p_y = 110
 end
 
 function _update60()

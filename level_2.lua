@@ -1,3 +1,7 @@
+function level_2_init()
+
+end
+
 function level_2_update()
 
 end

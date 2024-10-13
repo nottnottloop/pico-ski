@@ -5,6 +5,7 @@ __lua__
 -- inspired by taito's alpine ski
 #include main.lua
 #include misc.lua
+#include player.lua
 #include menu.lua
 #include transition.lua
 #include level_1.lua

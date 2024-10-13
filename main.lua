@@ -12,7 +12,16 @@ function _init()
 	milliseconds_display = 0
 	
 	p_x = 63
-	p_y = 110
+	p_y = 0 
+	c_x = 0
+	c_y = 0
+	
+	speed = 5
+	
+	level_1_inited = false
+	level_2_inited = false
+	
+	tree_checkpoint = p_y
 end
 
 function _update60()

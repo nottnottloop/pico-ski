@@ -11,7 +11,7 @@ function _init()
 	seconds_display = 0
 	milliseconds_display = 0
 	
-	p_x = 63
+	p_x = 150
 	p_y = 0 
 	c_x = 0
 	c_y = 0
@@ -22,6 +22,7 @@ function _init()
 	level_2_inited = false
 	
 	tree_checkpoint = p_y
+	tree_offset = 256
 end
 
 function _update60()

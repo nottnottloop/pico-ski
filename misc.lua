@@ -18,6 +18,17 @@ function draw_time_display()
 	--print(minutes_display..":"..seconds_display..":"..milliseconds_display,c_x+64-(7*4)/2,c_y+6,7)
 end
 
+function check_collisions(x_coord,y_coord)
+	-- boundary trees
+	if (p_x+2)<(5*16)-tree_offset or (p_x+14)>(-4*16)+tree_offset then		
+		collide()
+	end
+end
+
+function collide()
+	sfx(0)
+end
+
 function update_camera()
 	c_x = p_x-63+8
 	c_y = p_y-63+8
@@ -25,11 +36,11 @@ function update_camera()
 end
 
 function draw_boundary_trees()
-	if (flr(p_y) % 20 == 0) tree_checkpoint = flr(p_y)
-	for i=0,10,1 do
+	if (p_y % 80 == 0) tree_checkpoint = p_y
+	for i=-10,20 do
 		for j=0,4 do
-			spr(3,j*16,tree_checkpoint+80-(i*16),2,2)
-			spr(3,(j*16)+512,tree_checkpoint+80-(i*16),2,2)
+			spr(3,(j*16)-tree_offset,tree_checkpoint+80-(i*16),2,2)
+			spr(3,(-j*16)+tree_offset,tree_checkpoint+80-(i*16),2,2)
 		end
 	end
 end

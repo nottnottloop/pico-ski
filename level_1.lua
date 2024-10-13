@@ -8,6 +8,7 @@ function level_1_update()
 	elapsed_time+=(1/60)
 	
 	move_skier()
+	check_collisions()
 	--if elapsed_time > time_limit then
 	--	game_state = "game_over"
 	--end
@@ -23,4 +24,5 @@ function level_1_draw()
 	draw_time_display()
 	spr(1,p_x,p_y,2,2)
 	print(p_x.." "..p_y,33+c_x,63+c_y)
+	pset(p_x,p_y,10)
 end

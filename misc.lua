@@ -55,12 +55,41 @@ end
 
 function generate_obstacles()
 	--add(obstacles_table,{sprite=5,x=0,y=0})
-	add(score_objects_table,{value=100,x=0,y=-50,taken=false})
+	--add(score_objects_table,{value=100,x=0,y=-50,taken=false})
+	for i=1,amount_of_scoring_areas do
+		local possible_point_values = {100, 200, 500, 1000}
+		local value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
+		local rand_x = flr(rnd((-80)+tree_offset*2))-tree_offset+80
+		local rand_y = -flr(rnd(length_of_level-300))-150
+
+		start_x = rand_x-25+rnd(4)
+		end_x = rand_x+25+rnd(4)
+		width = end_x + 16 - start_x
+		add(score_objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=width,start_x=start_x})
+
+		local sprite_1 = 5 + flr(rnd(3))*2
+		local sprite_2 = 5 + flr(rnd(3))*2
+		add(obstacles_table,{sprite=sprite_1,x=start_x,y=rand_y-8+rnd(4),width=16})
+		add(obstacles_table,{sprite=sprite_2,x=end_x,y=rand_y-8+rnd(4),width=16})
+	end
 	for i=1,amount_of_obstacles do
 		local sprite = 5 + flr(rnd(3))*2
-		local rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+		local rand_x = 0
+		local generate = true
+		repeat
+			rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+			for j=1,#score_objects_table do
+				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + 16 > score_objects_table[j].start_x then
+					generate = false
+				end
+			end
+		until generate
 		local rand_y = -flr(rnd(length_of_level-300))-150
-		add(obstacles_table,{sprite=sprite,x=rand_x,y=rand_y})
+		add(obstacles_table,{sprite=sprite,x=rand_x,y=rand_y,width=16})
+	end
+	printh("", "obstacles.txt", true)
+	for i=1,#obstacles_table do
+	printh(obstacles_table[i].x, "obstacles.txt", false)
 	end
 end
 

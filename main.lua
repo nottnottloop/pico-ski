@@ -45,7 +45,7 @@ function _init()
 	
 	colliding = false
 
-	debug_movement = true
+	debug_movement = false
 	draw_debug_print = true
 end
 

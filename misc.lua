@@ -59,13 +59,24 @@ function generate_obstacles()
 	for i=1,amount_of_scoring_areas do
 		local possible_point_values = {100, 200, 500, 1000}
 		local value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
-		local rand_x = flr(rnd((-80)+tree_offset*2))-tree_offset+80
-		local rand_y = -flr(rnd(length_of_level-300))-150
 
-		start_x = rand_x-25+rnd(4)
-		end_x = rand_x+25+rnd(4)
+		local generate = true
+		local exclusion_zone = 40
+		local rand_x = 0
+		local rand_y = 0
+		repeat
+			rand_x = flr(rnd((-200)+tree_offset*2))-tree_offset+80
+			rand_y = -flr(rnd(length_of_level-300))-150
+			for j=1,#score_objects_table do
+				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + exclusion_zone > score_objects_table[j].start_x and rand_y > score_objects_table[j].start_y + exclusion_zone and rand_y + exclusion_zone < score_objects_table[j].start_y then
+					generate = false
+				end
+			end
+		until generate
+		start_x = rand_x-30+rnd(4)
+		end_x = rand_x+30+rnd(4)
 		width = end_x + 16 - start_x
-		add(score_objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=width,start_x=start_x})
+		add(score_objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=width,start_x=start_x,start_y=rand_y})
 
 		local sprite_1 = 5 + flr(rnd(3))*2
 		local sprite_2 = 5 + flr(rnd(3))*2
@@ -76,21 +87,22 @@ function generate_obstacles()
 		local sprite = 5 + flr(rnd(3))*2
 		local rand_x = 0
 		local generate = true
+		local exclusion_zone = 64
 		repeat
 			rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+			rand_y = -flr(rnd(length_of_level-300))-150
 			for j=1,#score_objects_table do
-				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + 16 > score_objects_table[j].start_x then
+				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + exclusion_zone > score_objects_table[j].start_x and rand_y > score_objects_table[j].start_y + exclusion_zone and rand_y + exclusion_zone < score_objects_table[j].start_y then
 					generate = false
 				end
 			end
 		until generate
-		local rand_y = -flr(rnd(length_of_level-300))-150
 		add(obstacles_table,{sprite=sprite,x=rand_x,y=rand_y,width=16})
 	end
-	printh("", "obstacles.txt", true)
-	for i=1,#obstacles_table do
-	printh(obstacles_table[i].x, "obstacles.txt", false)
-	end
+	--printh("", "obstacles.txt", true)
+	--for i=1,#obstacles_table do
+	--printh(obstacles_table[i].x, "obstacles.txt", false)
+	--end
 end
 
 function update_camera()

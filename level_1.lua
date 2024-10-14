@@ -1,7 +1,7 @@
 function level_1_init()
 	if not level_1_inited then
 		amount_of_scoring_areas = 250
-		amount_of_obstacles = 250
+		amount_of_obstacles = 150
 		generate_obstacles()
 		level_1_inited = true
 	end

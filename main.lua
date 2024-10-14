@@ -23,6 +23,13 @@ function _init()
 	
 	tree_checkpoint = p_y
 	tree_offset = 256
+	
+	length_of_level = 2000
+	
+	obstacles_table = {}
+	amount_of_obstacles = 0
+	
+	colliding = false
 end
 
 function _update60()

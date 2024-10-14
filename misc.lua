@@ -22,11 +22,23 @@ function check_collisions(x_coord,y_coord)
 	-- boundary trees
 	if (p_x+2)<(5*16)-tree_offset or (p_x+14)>(-4*16)+tree_offset then		
 		collide()
+	else
+		colliding = false
 	end
 end
 
 function collide()
-	sfx(0)
+	--sfx(0)
+	colliding = true
+end
+
+function generate_obstacles()
+	for i=1,amount_of_obstacles do
+		local sprite = 5 + flr(rnd(3))*2
+		local rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+		local rand_y = -flr(rnd(length_of_level))
+		add(obstacles_table,{sprite=sprite,x=rand_x,y=rand_y})
+	end
 end
 
 function update_camera()

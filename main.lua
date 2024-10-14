@@ -17,9 +17,12 @@ function _init()
 	c_y = 0
 	
 	speed = 2
-	minimum_speed = 2
+	normal_speed = 2
+	friction = 0.01
+	minimum_speed = 1.5
+	speed_cap = 3
 	acceleration = 0
-	acceleration_cap = 2
+	acceleration_cap = 0.02
 	acceleration_decay = 0.2
 	jerk = 0.0005
 
@@ -29,7 +32,7 @@ function _init()
 	tree_checkpoint = p_y
 	tree_offset = 256
 	
-	length_of_level = 1000
+	length_of_level = 20000
 	
 	obstacles_table = {}
 	amount_of_obstacles = 0

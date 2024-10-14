@@ -50,12 +50,12 @@ end
 
 function update_camera()
 	c_x = p_x-63+8
-	c_y = p_y-114+8
+	c_y = p_y-120+8
 	camera(c_x,c_y)
 end
 
 function draw_boundary_trees()
-	if (p_y % 80 == 0) tree_checkpoint = p_y
+	if (flr(p_y) % 80 < 3) tree_checkpoint = p_y
 	for i=-10,20 do
 		for j=0,4 do
 			spr(3,(j*16)-tree_offset,tree_checkpoint+80-(i*16),2,2)
@@ -66,7 +66,7 @@ end
 
 function debug_print()
 	if draw_debug_print then
-		--print(p_x.." "..p_y,33+c_x,63+c_y)
+		print(p_x.." "..p_y,33+c_x,50+c_y)
 		print(acceleration,33+c_x,63+c_y)
 		print(speed)
 		pset(p_x,p_y,10)

@@ -1,6 +1,9 @@
 function move_skier()
 	if not debug_movement then
-		speed = speed + acceleration
+		if (btn(⬅️)) p_x-=speed
+		if (btn(➡️)) p_x+=speed
+
+		speed = min(speed + acceleration, speed_cap)
 		p_y -= speed
 		if (speed<minimum_speed) speed = minimum_speed
 		if (btn(⬅️)) turn(-1)
@@ -14,8 +17,20 @@ function move_skier()
 			accelerating = true
 			change_acceleration(1)
 		end
-		if not accelerating then 
-			if acceleration > 0 then
+		if not accelerating then
+			-- apply friction
+			if (abs(speed - normal_speed) < 0.1) then
+				speed = normal_speed
+			elseif speed > normal_speed then
+				speed -= friction
+			elseif speed < normal_speed then
+				speed += friction
+			end
+			
+			-- decay acceleration
+			if (abs(acceleration) < 0.1) then
+				acceleration = 0
+			elseif acceleration > 0 then
 				acceleration -= acceleration_decay
 			elseif acceleration < 0 then
 				acceleration += acceleration_decay
@@ -34,12 +49,16 @@ end
 
 function change_acceleration(value)
 	if value == -1 then
-		acceleration -= jerk
+		-- make deaccelerating slightly easier
+		acceleration -= jerk * 1.5
+		if (acceleration < -acceleration_cap) acceleration = -acceleration_cap
 	end
 
 	if value == 1 then
+		local jerk_multiplier = 1
+		if (normal_speed - speed < 0.2) jerk_multiplier = 2
 		acceleration += jerk
+		if (acceleration > acceleration_cap) acceleration = acceleration_cap
 	end
 
-	if (acceleration > acceleration_cap) acceleration = acceleration_cap
 end

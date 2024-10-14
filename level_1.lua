@@ -1,6 +1,6 @@
 function level_1_init()
 	if not level_1_inited then
-		amount_of_obstacles = 100
+		amount_of_obstacles = 1000
 		generate_obstacles()
 		level_1_inited = true
 	end

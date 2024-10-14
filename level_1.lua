@@ -1,6 +1,7 @@
 function level_1_init()
 	if not level_1_inited then
 		amount_of_obstacles = 1000
+		amount_of_scoring_areas = 100
 		generate_obstacles()
 		level_1_inited = true
 	end
@@ -28,9 +29,8 @@ function level_1_draw()
 	
 	-- obstacles
 	draw_boundary_trees()
-	for i=1, #obstacles_table do
-		spr(obstacles_table[i].sprite,obstacles_table[i].x,obstacles_table[i].y,2,2)
-	end
+	draw_objects()
+
 	
 	-- skier
 	spr(1,p_x,p_y,2,2)

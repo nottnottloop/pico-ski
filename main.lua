@@ -15,12 +15,16 @@ function _init()
 	p_y = 0 
 	c_x = 0
 	c_y = 0
+	camera_jerk_cap = 24
+	camera_jerk_increment = 0.5
+	c_jerk_x = 0
+	c_jerk_y = 0
 	
-	speed = 2
-	normal_speed = 2
+	speed = 1.5
+	normal_speed = 1.5
 	friction = 0.01
-	minimum_speed = 1.5
-	speed_cap = 3
+	minimum_speed = 1.2
+	speed_cap = 2.75
 	acceleration = 0
 	acceleration_cap = 0.02
 	acceleration_decay = 0.2
@@ -35,11 +39,13 @@ function _init()
 	length_of_level = 20000
 	
 	obstacles_table = {}
+	score_objects_table = {}
 	amount_of_obstacles = 0
+	amount_of_scoring_areas = 0
 	
 	colliding = false
 
-	debug_movement = false
+	debug_movement = true
 	draw_debug_print = true
 end
 

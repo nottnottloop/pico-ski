@@ -1,22 +1,22 @@
 function move_skier()
 	if not debug_movement then
-		if (btn(⬅️)) p_x-=speed
-		if (btn(➡️)) p_x+=speed
-
 		speed = min(speed + acceleration, speed_cap)
 		p_y -= speed
 		if (speed<minimum_speed) speed = minimum_speed
+
+		accelerating = false
+		turning = false
+
 		if (btn(⬅️)) turn(-1)
 		if (btn(➡️)) turn(1)
-		local accelerating = false
-		if btn(⬇️) then
-			accelerating = true
-			change_acceleration(-1)
+		if (btn(⬇️)) change_acceleration(-1)
+		if (btn(⬆️)) change_acceleration(1)
+
+		if not turning then
+			if (c_jerk_x < 0) c_jerk_x += camera_jerk_increment * 0.5
+			if (c_jerk_x > 0) c_jerk_x -= camera_jerk_increment * 0.5
 		end
-		if btn(⬆️) then
-			accelerating = true
-			change_acceleration(1)
-		end
+
 		if not accelerating then
 			-- apply friction
 			if (abs(speed - normal_speed) < 0.1) then
@@ -37,17 +37,31 @@ function move_skier()
 			end
 		end
 	else
-		if (btn(⬅️)) p_x-=speed
-		if (btn(➡️)) p_x+=speed
-		if (btn(⬇️)) p_y+=speed
-		if (btn(⬆️)) p_y-=speed
+		if (btn(⬅️)) p_x-=speed_cap
+		if (btn(➡️)) p_x+=speed_cap
+		if (btn(⬇️)) p_y+=speed_cap
+		if (btn(⬆️)) p_y-=speed_cap
 	end
 end
 
 function turn(value)
+	turning = true
+	if value == -1 then
+		p_x-=speed
+		c_jerk_x-=camera_jerk_increment
+	end
+
+	if value == 1 then
+		p_x+=speed
+		c_jerk_x+=camera_jerk_increment
+	end
+	
+	if (c_jerk_x > camera_jerk_cap) c_jerk_x = camera_jerk_cap
+	if (c_jerk_x < -camera_jerk_cap) c_jerk_x = -camera_jerk_cap
 end
 
 function change_acceleration(value)
+	accelerating = true
 	if value == -1 then
 		-- make deaccelerating slightly easier
 		acceleration -= jerk * 1.5

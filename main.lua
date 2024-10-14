@@ -11,25 +11,33 @@ function _init()
 	seconds_display = 0
 	milliseconds_display = 0
 	
-	p_x = 150
+	p_x = 0
 	p_y = 0 
 	c_x = 0
 	c_y = 0
 	
-	speed = 5
-	
+	speed = 2
+	minimum_speed = 2
+	acceleration = 0
+	acceleration_cap = 2
+	acceleration_decay = 0.2
+	jerk = 0.0005
+
 	level_1_inited = false
 	level_2_inited = false
 	
 	tree_checkpoint = p_y
 	tree_offset = 256
 	
-	length_of_level = 2000
+	length_of_level = 1000
 	
 	obstacles_table = {}
 	amount_of_obstacles = 0
 	
 	colliding = false
+
+	debug_movement = false
+	draw_debug_print = true
 end
 
 function _update60()

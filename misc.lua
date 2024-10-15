@@ -70,6 +70,10 @@ function generate_objects()
 	--add(objects_table,{sprite=5,x=0,y=0})
 	--add(objects_table,{value=100,x=0,y=-50,taken=false})
 	
+	-- out of bounds
+	add(objects_table,{x=-tree_offset,y=-length_of_level,width=80,height=length_of_level,object="boundary_trees"})
+	add(objects_table,{x=tree_offset-80+16,y=-length_of_level,width=80,height=length_of_level,object="boundary_trees"})
+	
 	-- generate scoring areas
 	for i=1,amount_of_scoring_areas do
 		local possible_point_values = {100, 200, 500, 1000}
@@ -117,9 +121,10 @@ function generate_objects()
 end
 
 function check_generation_collision(width, height)
+	local generate = true
 	repeat
-		local generate = true
-		rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+		generate = true
+		rand_x = flr(rnd((tree_offset*2)-160))-tree_offset+80
 		rand_y = -flr(rnd(length_of_level-300))-150
 		for j=1,#objects_table do
 			test_object = {x=rand_x, y=rand_y,width=width,height=height}

@@ -36,17 +36,18 @@ function _init()
 	tree_checkpoint = p_y
 	tree_offset = 256
 	
-	length_of_level = 20000
+	length_of_level = 10000
 	
-	obstacles_table = {}
-	score_objects_table = {}
+	objects_table = {}
 	amount_of_obstacles = 0
 	amount_of_scoring_areas = 0
 	
 	colliding = false
 
-	debug_movement = false
+	debug_movement = true
 	draw_debug_print = true
+	debug_speed = 5
+	debug_printed = false
 end
 
 function _update60()

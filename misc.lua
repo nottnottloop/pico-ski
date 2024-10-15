@@ -22,10 +22,12 @@ end
 function check_collisions()
 	colliding = false
 	-- obstacles
-	for i=1, #obstacles_table do
-		if abs(p_y-obstacles_table[i].y) < 100 then
-			if (p_x+2)<obstacles_table[i].x+16 and ((p_x+2)+12)>obstacles_table[i].x and (p_y)<obstacles_table[i].y+16 and (p_y+16)>obstacles_table[i].y then
-				collide()
+	for i=1, #objects_table do
+		if objects_table[i].object == "obstacle" then
+			if abs(p_y-objects_table[i].y) < 100 then
+				if (p_x+2)<objects_table[i].x+16 and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+16 and (p_y+16)>objects_table[i].y then
+					collide()
+				end
 			end
 		end
 	end
@@ -36,13 +38,15 @@ function check_collisions()
 	end
 
 	-- score objects
-	for i=1, #score_objects_table do
-		if (not score_objects_table[i].taken) and (abs(p_y-score_objects_table[i].y) < 100) then
-			local length = #tostr(score_objects_table[i].value) * 4
-			if (p_x+2)<score_objects_table[i].x+length and ((p_x+2)+12)>score_objects_table[i].x and (p_y)<score_objects_table[i].y+6 and (p_y+6)>score_objects_table[i].y then
-				score += score_objects_table[i].value
-				sfx(0)
-				score_objects_table[i].taken = true
+	for i=1, #objects_table do
+		if objects_table[i].object == "score" then
+			if (not objects_table[i].taken) and (abs(p_y-objects_table[i].y) < 100) then
+				local length = #tostr(objects_table[i].value) * 4
+				if (p_x+2)<objects_table[i].x+length and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+6 and (p_y+6)>objects_table[i].y then
+					score += objects_table[i].value
+					sfx(0)
+					objects_table[i].taken = true
+				end
 			end
 		end
 	end
@@ -53,56 +57,71 @@ function collide()
 	colliding = true
 end
 
-function generate_obstacles()
-	--add(obstacles_table,{sprite=5,x=0,y=0})
-	--add(score_objects_table,{value=100,x=0,y=-50,taken=false})
+function generate_objects()
+	--add(objects_table,{sprite=5,x=0,y=0})
+	--add(objects_table,{value=100,x=0,y=-50,taken=false})
+	
+	-- generate scoring areas
 	for i=1,amount_of_scoring_areas do
 		local possible_point_values = {100, 200, 500, 1000}
 		local value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
 
-		local generate = true
-		local exclusion_zone = 40
-		local rand_x = 0
-		local rand_y = 0
-		repeat
-			rand_x = flr(rnd((-200)+tree_offset*2))-tree_offset+80
-			rand_y = -flr(rnd(length_of_level-300))-150
-			for j=1,#score_objects_table do
-				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + exclusion_zone > score_objects_table[j].start_x and rand_y > score_objects_table[j].start_y + exclusion_zone and rand_y + exclusion_zone < score_objects_table[j].start_y then
-					generate = false
-				end
-			end
-		until generate
-		start_x = rand_x-30+rnd(4)
-		end_x = rand_x+30+rnd(4)
-		width = end_x + 16 - start_x
-		add(score_objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=width,start_x=start_x,start_y=rand_y})
+		local x_shift_start = -30+rnd(4)
+		local x_shift_end = 30+rnd(4)
+		local width = x_shift_end + 16 - x_shift_start
+		local height = 100
+		-- this currently checks that the score object is not
+		-- overlapping with a big score bounding box
+		-- might need changing in the future
+		local rand_x, rand_y = check_generation_collision(width, height)
+		local start_x = rand_x + x_shift_start
+		local end_x = rand_x + x_shift_end
+		add(objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=16,height=6,object="score"})
 
 		local sprite_1 = 5 + flr(rnd(3))*2
 		local sprite_2 = 5 + flr(rnd(3))*2
-		add(obstacles_table,{sprite=sprite_1,x=start_x,y=rand_y-8+rnd(4),width=16})
-		add(obstacles_table,{sprite=sprite_2,x=end_x,y=rand_y-8+rnd(4),width=16})
+		add(objects_table,{sprite=sprite_1,x=start_x,y=rand_y-8+rnd(4),width=16,height=16,object="obstacle"})
+		add(objects_table,{sprite=sprite_2,x=end_x,y=rand_y-8+rnd(4),width=16,height=16,object="obstacle"})
+		-- big score bounding box
+		add(objects_table,{x=start_x,y=rand_y-height/2,width=width,height=height,object="none"})
 	end
+	
+	-- generate obstacles
 	for i=1,amount_of_obstacles do
 		local sprite = 5 + flr(rnd(3))*2
-		local rand_x = 0
-		local generate = true
-		local exclusion_zone = 64
-		repeat
-			rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
-			rand_y = -flr(rnd(length_of_level-300))-150
-			for j=1,#score_objects_table do
-				if rand_x < score_objects_table[j].start_x + score_objects_table[j].width and rand_x + exclusion_zone > score_objects_table[j].start_x and rand_y > score_objects_table[j].start_y + exclusion_zone and rand_y + exclusion_zone < score_objects_table[j].start_y then
-					generate = false
-				end
-			end
-		until generate
-		add(obstacles_table,{sprite=sprite,x=rand_x,y=rand_y,width=16})
+		local width = 16
+		local height = 16
+		local rand_x, rand_y = check_generation_collision(width, height) 
+		add(objects_table,{sprite=sprite,x=rand_x,y=rand_y,width=width,height=height,object="obstacle"})
 	end
-	--printh("", "obstacles.txt", true)
-	--for i=1,#obstacles_table do
-	--printh(obstacles_table[i].x, "obstacles.txt", false)
-	--end
+end
+
+function check_generation_collision(width, height)
+	repeat
+		local generate = true
+		rand_x = flr(rnd((-160)+tree_offset*2))-tree_offset+80
+		rand_y = -flr(rnd(length_of_level-300))-150
+		for j=1,#objects_table do
+			test_object = {x=rand_x, y=rand_y,width=width,height=height}
+			if check_bounding_boxes(objects_table[j], test_object) then
+				--if not debug_printed then
+				--	local fields = {"x", "y", "width", "height", "object"}
+				--	debug_local_file_save(objects_table[j], fields, "obj1.txt")
+				--	debug_local_file_save(test_object, fields, "obj2.txt")
+				--	debug_printed = true
+				--end
+				generate = false
+			end
+		end
+	until generate
+	return rand_x, rand_y
+end
+
+function check_bounding_boxes(obj1, obj2)
+    return obj1.x < obj2.x + obj2.width and
+           obj1.x + obj1.width > obj2.x and
+           obj1.y < obj2.y + obj2.height and
+           obj1.y + obj1.height > obj2.y
 end
 
 function update_camera()
@@ -123,15 +142,29 @@ end
 
 function draw_objects()
 	-- obstacles
-	for i=1, #obstacles_table do
-		spr(obstacles_table[i].sprite,obstacles_table[i].x,obstacles_table[i].y,2,2)
-	end
-
-	for i=1, #score_objects_table do
-		if not score_objects_table[i].taken then
-			print(score_objects_table[i].value,score_objects_table[i].x,score_objects_table[i].y,9)
+	for i=1, #objects_table do
+		if objects_table[i].object == "obstacle" then
+			spr(objects_table[i].sprite,objects_table[i].x,objects_table[i].y,2,2)
 		end
 	end
+
+	-- score objects
+	for i=1, #objects_table do
+		if objects_table[i].object == "score" then
+			if not objects_table[i].taken then
+				print(objects_table[i].value,objects_table[i].x,objects_table[i].y,10)
+			end
+		end
+	end
+	
+	-- debug
+	--for i=1, #objects_table do
+	--	print(i,objects_table[i].x,objects_table[i].y-10,7)
+	--	--if objects_table[i].object == "none" then
+	--		local obj = objects_table[i]
+	--		rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
+	--	--end
+	--end
 end
 
 function debug_print()
@@ -145,5 +178,12 @@ function debug_print()
 		end
 		print("cpu: "..stat(1),c_x,116+c_y)
 		print("memory: "..stat(0),c_x,122+c_y)
+	end
+end
+
+function debug_local_file_save(obj, fields, name)
+	printh(nil, name, true)
+	for i=1,#fields do
+		printh(obj[fields[i]], name, false)
 	end
 end

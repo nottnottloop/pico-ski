@@ -1,8 +1,9 @@
 function level_1_init()
 	if not level_1_inited then
-		amount_of_scoring_areas = 250
+		amount_of_scoring_areas = 100
 		amount_of_obstacles = 150
-		generate_obstacles()
+		--amount_of_obstacles = 1500
+		generate_objects()
 		level_1_inited = true
 	end
 end
@@ -22,7 +23,7 @@ end
 
 function level_1_draw()
 	-- darker bg from alternate palette
-	pal(0+12,128+12,1)
+	--pal(0+12,128+12,1)
 	cls(12)
 
 	update_camera()

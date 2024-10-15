@@ -37,10 +37,10 @@ function move_skier()
 			end
 		end
 	else
-		if (btn(⬅️)) p_x-=speed_cap
-		if (btn(➡️)) p_x+=speed_cap
-		if (btn(⬇️)) p_y+=speed_cap
-		if (btn(⬆️)) p_y-=speed_cap
+		if (btn(⬅️)) p_x-=debug_speed
+		if (btn(➡️)) p_x+=debug_speed
+		if (btn(⬇️)) p_y+=debug_speed
+		if (btn(⬆️)) p_y-=debug_speed
 	end
 end
 

@@ -100,6 +100,19 @@ function change_acceleration(value)
 	if (acceleration >= acceleration_cap) acceleration = acceleration_cap
 end
 
+function draw_skier()
+	local skier_sprite = 39
+	if abs(turning_progress) >= turning_limit then
+		skier_sprite += 4
+	elseif abs(turning_progress) >= turning_limit / 2 then
+		skier_sprite += 2
+	end
+	local flip_skier = false
+	if (turning_progress > 0) flip_skier = true
+
+	spr(skier_sprite,p_x,p_y,2,2,flip_skier)
+end
+
 function debug_move_skier()
 	if (btn(⬅️)) p_x-=debug_speed
 	if (btn(➡️)) p_x+=debug_speed

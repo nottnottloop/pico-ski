@@ -29,10 +29,9 @@ function check_collisions()
 
 	-- obstacles
 	for i=1, #objects_table do
-
 		if objects_table[i].object == "obstacle" then
 			if abs(p_y-objects_table[i].y) < 100 then
-				if (p_x+2)<objects_table[i].x+16 and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+16 and (p_y+16)>objects_table[i].y then
+				if check_player_collision(objects_table[i]) then
 					collide()
 				end
 			end
@@ -41,8 +40,7 @@ function check_collisions()
 		-- score objects
 		if objects_table[i].object == "score" then
 			if (not objects_table[i].taken) and (abs(p_y-objects_table[i].y) < 100) then
-				local length = #tostr(objects_table[i].value) * 4
-				if (p_x+2)<objects_table[i].x+length and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+6 and (p_y+6)>objects_table[i].y then
+				if check_player_collision(objects_table[i]) then
 					score += objects_table[i].value
 					sfx(0)
 					objects_table[i].taken = true
@@ -53,7 +51,7 @@ function check_collisions()
 		-- ice
 		if objects_table[i].object == "ice" then
 			if abs(p_y-objects_table[i].y) < 100 then
-				if (p_x+2)<objects_table[i].x+objects_table[i].width and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+objects_table[i].height and (p_y+16)>objects_table[i].y then
+				if check_player_collision(objects_table[i]) then
 					acceleration += 0.35
 				end
 			end
@@ -62,8 +60,16 @@ function check_collisions()
 end
 
 function collide()
+	if not debug_collision then
+		p_y -= 200
+	else
 	--sfx(0)
 	colliding = true
+	end
+end
+
+function check_player_collision(obj)
+	return (p_x+2)<obj.x+obj.width and ((p_x+2)+12)>obj.x and (p_y)<obj.y+obj.height and (p_y+16)>obj.y
 end
 
 function generate_objects()
@@ -89,7 +95,7 @@ function generate_objects()
 		local rand_x, rand_y = check_generation_collision(width, height)
 		local start_x = rand_x + x_shift_start
 		local end_x = rand_x + x_shift_end
-		add(objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=16,height=6,object="score"})
+		add(objects_table,{value=value,x=rand_x,y=rand_y,taken=false,width=#tostr(value)*4,height=6,object="score"})
 
 		local sprite_1 = 5 + flr(rnd(3))*2
 		local sprite_2 = 5 + flr(rnd(3))*2
@@ -189,13 +195,15 @@ function draw_objects()
 		end
 	end
 	-- debug
-	--for i=1, #objects_table do
-	--	print(i,objects_table[i].x,objects_table[i].y-10,7)
-	--	--if objects_table[i].object == "none" then
-	--		local obj = objects_table[i]
-	--		rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
-	--	--end
-	--end
+	if debug_show_hitboxes then
+		for i=1, #objects_table do
+			print(i,objects_table[i].x,objects_table[i].y-10,7)
+			--if objects_table[i].object == "none" then
+				local obj = objects_table[i]
+				rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
+			--end
+		end
+	end
 end
 
 function debug_print()

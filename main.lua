@@ -57,6 +57,8 @@ function _init()
 	draw_debug_print = true
 	debug_speed = 5
 	debug_printed = false
+	debug_collision = true
+	debug_show_hitboxes = false
 end
 
 function _update60()

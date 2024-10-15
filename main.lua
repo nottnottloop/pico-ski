@@ -20,15 +20,20 @@ function _init()
 	c_jerk_x = 0
 	c_jerk_y = 0
 	
-	speed = 1.5
-	normal_speed = 1.5
-	friction = 0.01
+	original_normal_speed = 2.25
+	normal_speed = original_normal_speed
+	speed = original_normal_speed
+	original_friction = 0.01
+	friction = original_friction
 	minimum_speed = 1.2
-	speed_cap = 2.75
+	speed_cap = 3.25
 	acceleration = 0
 	acceleration_cap = 0.02
 	acceleration_decay = 0.2
-	jerk = 0.0005
+	jerk = 0.0009
+	turning_deacceleration_cap = -0.75
+	turning_deacceleration = 0
+	turning_deacceleration_increment = -0.05
 
 	level_1_inited = false
 	level_2_inited = false
@@ -44,7 +49,7 @@ function _init()
 	
 	colliding = false
 
-	debug_movement = true
+	debug_movement = false
 	draw_debug_print = true
 	debug_speed = 5
 	debug_printed = false

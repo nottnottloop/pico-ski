@@ -1,20 +1,28 @@
 function move_skier()
 	if not debug_movement then
-		speed = min(speed + acceleration, speed_cap)
-		p_y -= speed
-		if (speed<minimum_speed) speed = minimum_speed
-
 		accelerating = false
 		turning = false
 
-		if (btn(⬅️)) turn(-1)
-		if (btn(➡️)) turn(1)
-		if (btn(⬇️)) change_acceleration(-1)
-		if (btn(⬆️)) change_acceleration(1)
+		if btn(⬅️) then
+			turn(-1)
+		elseif btn(➡️) then
+			turn(1)
+		end
+
+			if btn(⬇️) then 
+				change_acceleration(-1)
+			elseif btn(⬆️) then
+				change_acceleration(1)
+			end
 
 		if not turning then
+			normal_speed = original_normal_speed
+			friction = original_friction
 			if (c_jerk_x < 0) c_jerk_x += camera_jerk_increment * 0.5
 			if (c_jerk_x > 0) c_jerk_x -= camera_jerk_increment * 0.5
+		else
+			normal_speed = 1.9
+			friction = 0.02
 		end
 
 		if not accelerating then
@@ -36,6 +44,16 @@ function move_skier()
 				acceleration += acceleration_decay
 			end
 		end
+
+		--acceleration += turning_deacceleration
+
+		speed = min(speed + acceleration, speed_cap)
+		
+		--if (turning_deacceleration < 0) turning_deacceleration -= turning_deacceleration_increment
+
+		p_y -= speed
+		if (speed<minimum_speed) speed = minimum_speed
+
 	else
 		if (btn(⬅️)) p_x-=debug_speed
 		if (btn(➡️)) p_x+=debug_speed
@@ -56,6 +74,9 @@ function turn(value)
 		c_jerk_x+=camera_jerk_increment
 	end
 	
+	--turning_deacceleration += turning_deacceleration_increment
+	--if (turning_deacceleration < turning_deacceleration_cap) turning_deacceleration = turning_deacceleration_cap
+	
 	if (c_jerk_x > camera_jerk_cap) c_jerk_x = camera_jerk_cap
 	if (c_jerk_x < -camera_jerk_cap) c_jerk_x = -camera_jerk_cap
 end
@@ -64,13 +85,11 @@ function change_acceleration(value)
 	accelerating = true
 	if value == -1 then
 		-- make deaccelerating slightly easier
-		acceleration -= jerk * 1.5
+		acceleration -= jerk * 1.75
 		if (acceleration < -acceleration_cap) acceleration = -acceleration_cap
 	end
 
 	if value == 1 then
-		local jerk_multiplier = 1
-		if (normal_speed - speed < 0.2) jerk_multiplier = 2
 		acceleration += jerk
 		if (acceleration > acceleration_cap) acceleration = acceleration_cap
 	end

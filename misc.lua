@@ -169,8 +169,9 @@ end
 
 function debug_print()
 	if draw_debug_print then
-		print(p_x.." "..p_y,33+c_x,50+c_y)
+		--print(p_x.." "..p_y,33+c_x,50+c_y)
 		print(acceleration,33+c_x,63+c_y)
+		print(turning_deacceleration)
 		print(speed)
 		pset(p_x,p_y,10)
 		if colliding then

@@ -1,7 +1,9 @@
 function level_1_init()
 	if not level_1_inited then
 		amount_of_scoring_areas = 100
-		amount_of_obstacles = 300
+		--amount_of_obstacles = 300
+		--amount_of_ice = 30
+		amount_of_ice = 200
 		--amount_of_obstacles = 1500
 		generate_objects()
 		level_1_inited = true
@@ -13,7 +15,12 @@ function level_1_update()
 	update_time_display()
 	elapsed_time+=(1/60)
 	
-	move_skier()
+	if not debug_movement then
+		move_skier()
+	else
+		debug_move_skier()
+	end
+
 	check_collisions()
 	if (p_y < -length_of_level) _init()
 	--if elapsed_time > time_limit then

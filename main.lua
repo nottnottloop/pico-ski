@@ -26,8 +26,9 @@ function _init()
 	speed = original_normal_speed
 	original_friction = 0.01
 	friction = original_friction
-	minimum_speed = 1.2
+	minimum_speed = 2
 	speed_cap = 4
+	ice_colliding = false
 	acceleration = 0
 	acceleration_cap = 0.02
 	acceleration_decay = 0.2

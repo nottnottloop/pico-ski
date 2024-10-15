@@ -21,8 +21,15 @@ end
 
 function check_collisions()
 	colliding = false
+
+	-- boundary trees
+	if (p_x+2)<(5*16)-tree_offset or (p_x+14)>(-4*16)+tree_offset then		
+		collide()
+	end
+
 	-- obstacles
 	for i=1, #objects_table do
+
 		if objects_table[i].object == "obstacle" then
 			if abs(p_y-objects_table[i].y) < 100 then
 				if (p_x+2)<objects_table[i].x+16 and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+16 and (p_y+16)>objects_table[i].y then
@@ -30,15 +37,8 @@ function check_collisions()
 				end
 			end
 		end
-	end
 
-	-- boundary trees
-	if (p_x+2)<(5*16)-tree_offset or (p_x+14)>(-4*16)+tree_offset then		
-		collide()
-	end
-
-	-- score objects
-	for i=1, #objects_table do
+		-- score objects
 		if objects_table[i].object == "score" then
 			if (not objects_table[i].taken) and (abs(p_y-objects_table[i].y) < 100) then
 				local length = #tostr(objects_table[i].value) * 4
@@ -46,6 +46,15 @@ function check_collisions()
 					score += objects_table[i].value
 					sfx(0)
 					objects_table[i].taken = true
+				end
+			end
+		end
+	
+		-- ice
+		if objects_table[i].object == "ice" then
+			if abs(p_y-objects_table[i].y) < 100 then
+				if (p_x+2)<objects_table[i].x+objects_table[i].width and ((p_x+2)+12)>objects_table[i].x and (p_y)<objects_table[i].y+objects_table[i].height and (p_y+16)>objects_table[i].y then
+					acceleration += 0.35
 				end
 			end
 		end
@@ -93,6 +102,17 @@ function generate_objects()
 		local height = 16
 		local rand_x, rand_y = check_generation_collision(width, height) 
 		add(objects_table,{sprite=sprite,x=rand_x,y=rand_y,width=width,height=height,object="obstacle"})
+	end
+	
+	-- generate ice
+	for i=1,amount_of_ice do
+		local sprite = 64
+		local width = 32
+		local height = 32
+		local rand_x, rand_y = check_generation_collision(width, height) 
+		add(objects_table,{sprite=sprite,x=rand_x,y=rand_y,width=width,height=height,object="ice"})
+		-- big ice bounding box
+		add(objects_table,{x=rand_x,y=rand_y-height,width=width,height=height+50,object="none"})
 	end
 end
 
@@ -157,6 +177,12 @@ function draw_objects()
 		end
 	end
 	
+	-- ice
+	for i=1, #objects_table do
+		if objects_table[i].object == "ice" then
+			spr(64,objects_table[i].x,objects_table[i].y,4,4)
+		end
+	end
 	-- debug
 	--for i=1, #objects_table do
 	--	print(i,objects_table[i].x,objects_table[i].y-10,7)

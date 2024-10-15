@@ -15,8 +15,8 @@ function draw_time_display()
 	print("score",c_x+6,c_y+0,7)
 	local length_of_score = #tostr(score)
 	print(score,c_x+8+5*4-length_of_score*4,c_y+6,7)
-	--print("time",c_x+64-(4*4)/2,c_y+0,8)
-	--print(minutes_display..":"..seconds_display..":"..milliseconds_display,c_x+64-(7*4)/2,c_y+6,7)
+	print("time",c_x+64-(4*4)/2,c_y+0,8)
+	print(minutes_display..":"..seconds_display..":"..milliseconds_display,c_x+64-(7*4)/2,c_y+6,7)
 end
 
 function check_collisions()
@@ -131,11 +131,11 @@ function update_camera()
 end
 
 function draw_boundary_trees()
-	if (flr(p_y) % 80 < 3) tree_checkpoint = p_y
-	for i=0,20 do
+	if (p_y < tree_checkpoint - 30) tree_checkpoint = p_y
+	for i=0,8 do
 		for j=0,4 do
-			spr(3,(j*16)-tree_offset,tree_checkpoint+80-(i*16),2,2)
-			spr(3,(-j*16)+tree_offset,tree_checkpoint+80-(i*16),2,2)
+			spr(3,(j*16)-tree_offset,tree_checkpoint-(i*16),2,2)
+			spr(3,(-j*16)+tree_offset,tree_checkpoint-(i*16),2,2)
 		end
 	end
 end

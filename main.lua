@@ -5,6 +5,7 @@ function _init()
 	high_score = 0
 
 	score = 0
+	score_checkpoint = 0
 	time_limit = 150
 	elapsed_time = 0
 	minutes_display = 0
@@ -20,13 +21,13 @@ function _init()
 	c_jerk_x = 0
 	c_jerk_y = 0
 	
-	original_normal_speed = 2.25
+	original_normal_speed = 2.75
 	normal_speed = original_normal_speed
 	speed = original_normal_speed
 	original_friction = 0.01
 	friction = original_friction
 	minimum_speed = 1.2
-	speed_cap = 3.25
+	speed_cap = 4
 	acceleration = 0
 	acceleration_cap = 0.02
 	acceleration_decay = 0.2
@@ -43,7 +44,7 @@ function _init()
 	tree_checkpoint = p_y
 	tree_offset = 256
 	
-	length_of_level = 10000
+	length_of_level = 9000
 	
 	objects_table = {}
 	amount_of_obstacles = 0

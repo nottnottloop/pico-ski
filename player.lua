@@ -2,6 +2,10 @@ function move_skier()
 	if not debug_movement then
 		accelerating = false
 		turning = false
+		if p_y < score_checkpoint then
+			score += 1
+			score_checkpoint = p_y - 40
+		end
 
 		if btn(⬅️) then
 			turn(-1)
@@ -23,8 +27,10 @@ function move_skier()
 			if (c_jerk_x < 0) c_jerk_x += camera_jerk_increment * 0.5
 			if (c_jerk_x > 0) c_jerk_x -= camera_jerk_increment * 0.5
 		else
-			normal_speed = 1.9
-			friction = 0.02
+			if abs(turning_progress) > turning_limit * 0.65 then
+				normal_speed = 2.25
+				friction = 0.02
+			end
 		end
 
 		if not accelerating then
@@ -67,14 +73,16 @@ end
 function turn(value)
 	turning = true
 	if value == -1 then
+		if (turning_progress > 0) turning_progress = 0
 		p_x-=speed
-		turning_progress += 0.01
+		turning_progress -= 0.01
 		c_jerk_x-=camera_jerk_increment
 	end
 
 	if value == 1 then
+		if (turning_progress < 0) turning_progress = 0
 		p_x+=speed
-		turning_progress -= 0.01
+		turning_progress += 0.01
 		c_jerk_x+=camera_jerk_increment
 	end
 	
@@ -88,8 +96,8 @@ end
 function change_acceleration(value)
 	accelerating = true
 	if value == -1 then
-		-- make deaccelerating slightly easier
-		acceleration -= jerk * 1.75
+		-- make deaccelerating slightly harder
+		acceleration -= jerk * 0.75
 		if (acceleration < -acceleration_cap) acceleration = -acceleration_cap
 	end
 

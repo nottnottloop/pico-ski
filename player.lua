@@ -7,13 +7,15 @@ function move_skier()
 			turn(-1)
 		elseif btn(➡️) then
 			turn(1)
+		else
+			turning_progress = 0
 		end
 
-			if btn(⬇️) then 
-				change_acceleration(-1)
-			elseif btn(⬆️) then
-				change_acceleration(1)
-			end
+		if btn(⬇️) then 
+			change_acceleration(-1)
+		elseif btn(⬆️) then
+			change_acceleration(1)
+		end
 
 		if not turning then
 			normal_speed = original_normal_speed
@@ -66,11 +68,13 @@ function turn(value)
 	turning = true
 	if value == -1 then
 		p_x-=speed
+		turning_progress += 0.01
 		c_jerk_x-=camera_jerk_increment
 	end
 
 	if value == 1 then
 		p_x+=speed
+		turning_progress -= 0.01
 		c_jerk_x+=camera_jerk_increment
 	end
 	

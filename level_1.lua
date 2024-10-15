@@ -34,7 +34,16 @@ function level_1_draw()
 
 	
 	-- skier
-	spr(1,p_x,p_y,2,2)
+	local skier_sprite = 39
+	if abs(turning_progress) >= turning_limit then
+		skier_sprite += 4
+	elseif abs(turning_progress) >= turning_limit / 2 then
+		skier_sprite += 2
+	end
+	local flip_skier = false
+	if (turning_progress < 0) flip_skier = true
+
+	spr(skier_sprite,p_x,p_y,2,2,flip_skier)
 
 	draw_time_display()
 	

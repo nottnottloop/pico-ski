@@ -34,6 +34,8 @@ function _init()
 	turning_deacceleration_cap = -0.75
 	turning_deacceleration = 0
 	turning_deacceleration_increment = -0.05
+	turning_progress = 0
+	turning_limit = 0.1
 
 	level_1_inited = false
 	level_2_inited = false

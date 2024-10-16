@@ -60,11 +60,33 @@ function check_collisions()
 end
 
 function collide()
+	colliding = true
 	if not debug_collision then
-		p_y -= 200
+		p_y += 150
+		local respawn_player = true
+		local trees_collide = false
+		repeat
+			respawn_player = true
+			trees_collide = false
+			for i=1, #objects_table do
+				if objects_table[i].object != "none" then
+					if check_player_collision({x=objects_table[i].x,y=objects_table[i].y,width=objects_table[i].width+20,height=objects_table[i].height+20}) then
+						respawn_player = false
+						if objects_table[i].object == "boundary_trees" then
+							trees_collide = true
+							if (objects_table[i].trees == "left") p_x += 30
+							if (objects_table[i].trees == "right") p_x -= 30
+						end	
+					end
+				end
+			end
+		if (not respawn_player and not trees_collide) p_y += 30
+		if (p_y > 0) p_y = 0
+		--if (p_y > 0) p_y = -100
+		until respawn_player
+		tree_checkpoint = p_y + 0.5
 	else
 	--sfx(0)
-	colliding = true
 	end
 end
 
@@ -77,8 +99,8 @@ function generate_objects()
 	--add(objects_table,{value=100,x=0,y=-50,taken=false})
 	
 	-- out of bounds
-	add(objects_table,{x=-tree_offset,y=-length_of_level,width=80,height=length_of_level,object="boundary_trees"})
-	add(objects_table,{x=tree_offset-80+16,y=-length_of_level,width=80,height=length_of_level,object="boundary_trees"})
+	add(objects_table,{x=-tree_offset,y=-length_of_level,width=80,height=32767,object="boundary_trees",trees="left"})
+	add(objects_table,{x=tree_offset-80+16,y=-length_of_level,width=80,height=32767,object="boundary_trees",trees="right"})
 	
 	-- generate scoring areas
 	for i=1,amount_of_scoring_areas do
@@ -208,16 +230,16 @@ end
 
 function debug_print()
 	if draw_debug_print then
-		--print(p_x.." "..p_y,33+c_x,50+c_y)
-		print(acceleration,33+c_x,63+c_y)
-		print(turning_deacceleration)
-		print(speed)
-		pset(p_x,p_y,10)
+		print(p_x.." "..p_y,33+c_x,50+c_y)
+		--print(acceleration,33+c_x,63+c_y)
+		--print(turning_deacceleration)
+		--print(speed)
+		--pset(p_x,p_y,10)
 		if colliding then
 			print("colliding!",15+c_x,93+c_y)
 		end
-		print("cpu: "..stat(1),c_x,116+c_y)
-		print("memory: "..stat(0),c_x,122+c_y)
+		print("cpu: "..stat(1),c_x,116+c_y,10)
+		print("memory: "..stat(0),c_x,122+c_y,10)
 	end
 end
 

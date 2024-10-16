@@ -3,6 +3,7 @@ function level_1_init()
 		amount_of_scoring_areas = 100
 		amount_of_obstacles = 200
 		amount_of_ice = 30
+		amount_of_flag_areas = 0
 		--amount_of_ice = 200
 		--amount_of_obstacles = 1500
 		generate_objects()
@@ -43,6 +44,7 @@ function level_1_draw()
 	draw_skier()
 
 	draw_time_display()
+	draw_messages()
 	
 	-- debug
 	debug_print()

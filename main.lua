@@ -1,6 +1,6 @@
 function _init()
 	-- menu, transition, level_1, level_2, game_over
-	game_state = "level_1"
+	game_state = "level_2"
 	--game_state="menu"
 	high_score = 0
 
@@ -54,12 +54,12 @@ function _init()
 	
 	colliding = false
 
-	debug_movement = false
+	debug_movement = true
 	draw_debug_print = true
 	debug_speed = 5
 	debug_printed = false
 	debug_collision = false
-	debug_show_hitboxes = false
+	debug_show_hitboxes = true
 end
 
 function _update60()

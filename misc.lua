@@ -85,6 +85,9 @@ function collide()
 		until respawn_player
 		started_skiing = false
 		turning_progress = 0
+		elapsed_time += 10
+		c_jerk_x = 0
+		c_jerk_y = 0
 		tree_checkpoint = p_y + 0.5
 	else
 	--sfx(0)
@@ -128,6 +131,25 @@ function generate_objects()
 		add(objects_table,{x=start_x,y=rand_y-height/2,width=width,height=height,object="none"})
 	end
 	
+	-- generate flag areas
+	for i=1,amount_of_flag_areas do
+		local possible_point_values = {100, 200, 500}
+		local value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
+		local flags_offset = flr(rnd(2))
+		local x_flag_shift = 15 * flags_offset
+		local width = (x_flag_shift * 2) + 16 + 50
+		local height = 200
+		local rand_x, rand_y = check_generation_collision(width, height)
+		for i=1,4 do
+			if (i%2==0) shift_direction = -1 else shift_direction=1
+			local final_x_shift = x_flag_shift * (-1*flags_offset*shift_direction)
+			add(objects_table,{value=-100,green=i%2,x=rand_x+final_x_shift,y=rand_y+(height/4)*i,taken=false,width=12,height=12,object="flag"})
+			add(objects_table,{value=value,x=rand_x,y=rand_y+(height/4)*i+(height/8),taken=false,width=#tostr(value)*4,height=6,object="score"})
+		end
+		-- bounding box
+		add(objects_table,{x=rand_x-8-(x_flag_shift* flags_offset)-width/2,y=rand_y,width=width,height=height,object="none"})
+	end
+
 	-- generate obstacles
 	for i=1,amount_of_obstacles do
 		local sprite = 5 + flr(rnd(3))*2
@@ -195,49 +217,55 @@ function draw_boundary_trees()
 end
 
 function draw_objects()
-	-- obstacles
 	for i=1, #objects_table do
+		-- obstacles
 		if objects_table[i].object == "obstacle" then
 			spr(objects_table[i].sprite,objects_table[i].x,objects_table[i].y,2,2)
 		end
-	end
 
-	-- score objects
-	for i=1, #objects_table do
+		-- score objects
 		if objects_table[i].object == "score" then
 			if not objects_table[i].taken then
 				print(objects_table[i].value,objects_table[i].x,objects_table[i].y,10)
 			end
 		end
-	end
 	
-	-- ice
-	for i=1, #objects_table do
+		-- flags
+		if objects_table[i].object == "flag" then
+			sspr(32+16*objects_table[i].green,32,16,16,objects_table[i].x,objects_table[i].y,objects_table[i].width,objects_table[i].height)
+		end
+	
+		-- ice
 		if objects_table[i].object == "ice" then
 			spr(64,objects_table[i].x,objects_table[i].y,4,4)
 		end
-	end
-	-- debug
-	if debug_show_hitboxes then
-		for i=1, #objects_table do
+		
+		-- debug
+		if debug_show_hitboxes then
 			print(i,objects_table[i].x,objects_table[i].y-10,7)
 			--if objects_table[i].object == "none" then
 				local obj = objects_table[i]
 				rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
-			--end
 		end
+	end
+end
+
+function draw_messages()
+	if not started_skiing and not debug_movement then
+		start_skiing_message = "press 🅾️ to ski"
+		print(start_skiing_message,63+c_x-#start_skiing_message*2,100+c_y,7)
 	end
 end
 
 function debug_print()
 	if draw_debug_print then
-		print(p_x.." "..p_y,33+c_x,50+c_y)
+		print(p_x.." "..p_y,33+c_x,50+c_y,7)
 		--print(acceleration,33+c_x,63+c_y)
 		--print(turning_deacceleration)
 		--print(speed)
 		--pset(p_x,p_y,10)
-		if colliding then
-			print("colliding!",15+c_x,93+c_y)
+		if colliding and debug_collision then
+			print("colliding!",15+c_x,93+c_y,10)
 		end
 		print("cpu: "..stat(1),c_x,116+c_y,10)
 		print("memory: "..stat(0),c_x,122+c_y,10)

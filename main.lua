@@ -21,6 +21,7 @@ function _init()
 	c_jerk_x = 0
 	c_jerk_y = 0
 	
+	started_skiing = false
 	original_normal_speed = 2.75
 	normal_speed = original_normal_speed
 	speed = original_normal_speed

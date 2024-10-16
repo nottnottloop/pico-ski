@@ -6,61 +6,66 @@ function move_skier()
 		score_checkpoint = p_y - 40
 	end
 
-	if btn(⬅️) then
-		turn(-1)
-	elseif btn(➡️) then
-		turn(1)
-	else
-		turning_progress = 0
+	if btn(🅾️) then
+		started_skiing = true
 	end
 
-	if btn(⬇️) then 
-		change_acceleration(-1)
-	elseif btn(⬆️) then
-		change_acceleration(1)
-	end
-
-	if not turning then
-		normal_speed = original_normal_speed
-		friction = original_friction
-		if (c_jerk_x < 0) c_jerk_x += camera_jerk_increment * 0.5
-		if (c_jerk_x > 0) c_jerk_x -= camera_jerk_increment * 0.5
-	else
-		if abs(turning_progress) > turning_limit * 0.65 then
-			normal_speed = 2.25
-			friction = 0.02
+	if started_skiing then
+		if btn(⬅️) then
+			turn(-1)
+		elseif btn(➡️) then
+			turn(1)
+		else
+			turning_progress = 0
 		end
-	end
 
-	if not accelerating then
-		-- apply friction
-		if (abs(speed - normal_speed) < 0.1) then
-			speed = normal_speed
-		elseif speed > normal_speed then
-			speed -= friction
-		elseif speed < normal_speed then
-			speed += friction
+		if btn(⬇️) then 
+			change_acceleration(-1)
+		elseif btn(⬆️) then
+			change_acceleration(1)
 		end
+
+		if not turning then
+			normal_speed = original_normal_speed
+			friction = original_friction
+			if (c_jerk_x < 0) c_jerk_x += camera_jerk_increment * 0.5
+			if (c_jerk_x > 0) c_jerk_x -= camera_jerk_increment * 0.5
+		else
+			if abs(turning_progress) > turning_limit * 0.65 then
+				normal_speed = 2.25
+				friction = 0.02
+			end
+		end
+
+		if not accelerating then
+			-- apply friction
+			if (abs(speed - normal_speed) < 0.1) then
+				speed = normal_speed
+			elseif speed > normal_speed then
+				speed -= friction
+			elseif speed < normal_speed then
+				speed += friction
+			end
+			
+			-- decay acceleration
+			if (abs(acceleration) < 0.1) then
+				acceleration = 0
+			elseif acceleration > 0 then
+				acceleration -= acceleration_decay
+			elseif acceleration < 0 then
+				acceleration += acceleration_decay
+			end
+		end
+
+		--acceleration += turning_deacceleration
+
+		speed = min(speed + acceleration, speed_cap)
 		
-		-- decay acceleration
-		if (abs(acceleration) < 0.1) then
-			acceleration = 0
-		elseif acceleration > 0 then
-			acceleration -= acceleration_decay
-		elseif acceleration < 0 then
-			acceleration += acceleration_decay
-		end
+		--if (turning_deacceleration < 0) turning_deacceleration -= turning_deacceleration_increment
+
+		p_y -= speed
+		if (speed<minimum_speed) speed = minimum_speed
 	end
-
-	--acceleration += turning_deacceleration
-
-	speed = min(speed + acceleration, speed_cap)
-	
-	--if (turning_deacceleration < 0) turning_deacceleration -= turning_deacceleration_increment
-
-	p_y -= speed
-	if (speed<minimum_speed) speed = minimum_speed
-
 end
 
 function turn(value)
@@ -101,7 +106,7 @@ function change_acceleration(value)
 end
 
 function draw_skier()
-	local skier_sprite = 39
+	skier_sprite = 39
 	if abs(turning_progress) >= turning_limit then
 		skier_sprite += 4
 	elseif abs(turning_progress) >= turning_limit / 2 then

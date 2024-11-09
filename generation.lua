@@ -1,3 +1,32 @@
+function generate_objects()
+	--add(objects_table,{sprite=5,x=0,y=0})
+	--add(objects_table,{value=100,x=0,y=-50,taken=false})
+	
+	-- out of bounds
+	add(objects_table,{x=-tree_offset,y=-length_of_level,width=80,height=32767,object="boundary_trees",trees="left"})
+	add(objects_table,{x=tree_offset-80+16,y=-length_of_level,width=80,height=32767,object="boundary_trees",trees="right"})
+	
+	-- generate scoring areas
+	for i=1,amount_of_scoring_areas do
+		generate_scoring_area()
+	end
+	
+	-- generate flag areas
+	for i=1,amount_of_flag_areas do
+		generate_flag_area()
+	end
+
+	-- generate obstacles
+	for i=1,amount_of_obstacles do
+		generate_obstacle()
+	end
+	
+	-- generate ice
+	for i=1,amount_of_ice do
+		generate_ice()
+	end
+end
+
 function generate_rand_x_and_y_coords()
 	local rand_x = flr(rnd((tree_offset*2)-160))-tree_offset+80
 	local rand_y = -flr(rnd(length_of_level-300))-150

@@ -8,45 +8,48 @@ function check_collisions()
 
 	-- obstacles
 	for i=1, #objects_table do
-		if objects_table[i].object == "obstacle" then
-			--if abs(p_y-objects_table[i].y) < 100 then
-				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
-					collide()
-				end
-			--end
-		end
+		-- don't check for collisions for objects not on the screen
+		if should_check_object(objects_table[i]) then
+			if objects_table[i].object == "obstacle" then
+				--if abs(p_y-objects_table[i].y) < 100 then
+					if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
+						collide()
+					end
+				--end
+			end
 
-		-- score objects
-		if objects_table[i].object == "score" then
-			if not objects_table[i].taken then
-				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
-					score += objects_table[i].value
-					sfx(0)
-					objects_table[i].taken = true
+			-- score objects
+			if objects_table[i].object == "score" then
+				if not objects_table[i].taken then
+					if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
+						score += objects_table[i].value
+						sfx(0)
+						objects_table[i].taken = true
+					end
 				end
 			end
-		end
-	
-		-- ice
-		if objects_table[i].object == "ice" then
-			--if abs(p_y-objects_table[i].y) < 100 then
-				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
-					acceleration += 0.35
-				end
-			--end
-		end
 		
-		-- flags
-		if objects_table[i].object == "flag" then
-			--if abs(p_y-objects_table[i].y) < 100 then
-			if not objects_table[i].taken then
-				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
-					score += objects_table[i].value
-					sfx(1)
-					objects_table[i].taken = true
-				end
+			-- ice
+			if objects_table[i].object == "ice" then
+				--if abs(p_y-objects_table[i].y) < 100 then
+					if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
+						acceleration += 0.35
+					end
+				--end
 			end
-			--end
+			
+			-- flags
+			if objects_table[i].object == "flag" then
+				--if abs(p_y-objects_table[i].y) < 100 then
+				if not objects_table[i].taken then
+					if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
+						score += objects_table[i].value
+						sfx(1)
+						objects_table[i].taken = true
+					end
+				end
+				--end
+			end
 		end
 	end
 end

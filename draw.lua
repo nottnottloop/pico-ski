@@ -10,30 +10,33 @@ end
 
 function draw_objects()
 	for i=1, #objects_table do
-		-- obstacles
-		if objects_table[i].object == "obstacle" then
-			spr(objects_table[i].sprite,objects_table[i].x,objects_table[i].y,2,2)
-		end
+		-- don't render objects that are not visible on the screen
+		if should_check_object(objects_table[i]) then
+			-- obstacles
+			if objects_table[i].object == "obstacle" then
+				spr(objects_table[i].sprite,objects_table[i].x,objects_table[i].y,2,2)
+			end
 
-		-- score objects
-		if objects_table[i].object == "score" then
-			if not objects_table[i].taken then
-				print(objects_table[i].value,objects_table[i].x,objects_table[i].y,10)
+			-- score objects
+			if objects_table[i].object == "score" then
+				if not objects_table[i].taken then
+					print(objects_table[i].value,objects_table[i].x,objects_table[i].y,10)
+				end
 			end
-		end
-	
-		-- flags
-		if objects_table[i].object == "flag" then
-			flag_knocked_offset = objects_table[i].taken and 16 or 0
-			sspr(32+16*objects_table[i].blue,32+flag_knocked_offset,16,16,objects_table[i].x,objects_table[i].y,objects_table[i].width,objects_table[i].height)
-			if objects_table[i].taken then
-				print(objects_table[i].value,objects_table[i].x+10,objects_table[i].y-30,8)
+		
+			-- flags
+			if objects_table[i].object == "flag" then
+				flag_knocked_offset = objects_table[i].taken and 16 or 0
+				sspr(32+16*objects_table[i].blue,32+flag_knocked_offset,16,16,objects_table[i].x,objects_table[i].y,objects_table[i].width,objects_table[i].height)
+				if objects_table[i].taken then
+					print(objects_table[i].value,objects_table[i].x+10,objects_table[i].y-30,8)
+				end
 			end
-		end
-	
-		-- ice
-		if objects_table[i].object == "ice" then
-			spr(64,objects_table[i].x,objects_table[i].y,4,4)
+		
+			-- ice
+			if objects_table[i].object == "ice" then
+				spr(64,objects_table[i].x,objects_table[i].y,4,4)
+			end
 		end
 		
 		-- debug

@@ -1,3 +1,7 @@
+function should_check_object(obj)
+	return obj.y - p_y > -150 and obj.y < p_y + 150
+end
+
 function update_camera()
 	c_x = p_x-63+8+c_jerk_x
 	c_y = p_y-120+8+c_jerk_y

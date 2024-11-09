@@ -30,17 +30,17 @@ function check_collisions()
 	-- obstacles
 	for i=1, #objects_table do
 		if objects_table[i].object == "obstacle" then
-			if abs(p_y-objects_table[i].y) < 100 then
-				if check_player_collision(objects_table[i]) then
+			--if abs(p_y-objects_table[i].y) < 100 then
+				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
 					collide()
 				end
-			end
+			--end
 		end
 
 		-- score objects
 		if objects_table[i].object == "score" then
 			if (not objects_table[i].taken) and (abs(p_y-objects_table[i].y) < 100) then
-				if check_player_collision(objects_table[i]) then
+				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
 					score += objects_table[i].value
 					sfx(0)
 					objects_table[i].taken = true
@@ -50,11 +50,20 @@ function check_collisions()
 	
 		-- ice
 		if objects_table[i].object == "ice" then
-			if abs(p_y-objects_table[i].y) < 100 then
-				if check_player_collision(objects_table[i]) then
+			--if abs(p_y-objects_table[i].y) < 100 then
+				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
 					acceleration += 0.35
 				end
-			end
+			--end
+		end
+		
+		-- test regular bb
+		if objects_table[i].object == "none" then
+			--if abs(p_y-objects_table[i].y) < 100 then
+				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
+					collide()
+				end
+			--end
 		end
 	end
 end
@@ -70,7 +79,7 @@ function collide()
 			trees_collide = false
 			for i=1, #objects_table do
 				if objects_table[i].object != "none" then
-					if check_player_collision({x=objects_table[i].x,y=objects_table[i].y,width=objects_table[i].width+20,height=objects_table[i].height+20}) then
+					if check_bounding_boxes(get_player_bounding_box(), {x=objects_table[i].x,y=objects_table[i].y,width=objects_table[i].width+20,height=objects_table[i].height+20}) then
 						respawn_player = false
 						if objects_table[i].object == "boundary_trees" then
 							trees_collide = true
@@ -94,8 +103,8 @@ function collide()
 	end
 end
 
-function check_player_collision(obj)
-	return (p_x+2)<obj.x+obj.width and ((p_x+2)+12)>obj.x and (p_y)<obj.y+obj.height and (p_y+16)>obj.y
+function get_player_bounding_box()
+	return {x=p_x+1,y=p_y,width=13,height=16}
 end
 
 function generate_objects()
@@ -143,8 +152,8 @@ function generate_objects()
 		for i=1,4 do
 			if (i%2==0) shift_direction = -1 else shift_direction=1
 			local final_x_shift = x_flag_shift * (-1*flags_offset*shift_direction)
-			add(objects_table,{value=-100,green=i%2,x=rand_x+final_x_shift,y=rand_y+(height/4)*i,taken=false,width=12,height=12,object="flag"})
-			add(objects_table,{value=value,x=rand_x,y=rand_y+(height/4)*i+(height/8),taken=false,width=#tostr(value)*4,height=6,object="score"})
+			--add(objects_table,{value=-100,green=i%2,x=rand_x+final_x_shift,y=rand_y+(height/4)*i,taken=false,width=12,height=12,object="flag"})
+			--add(objects_table,{value=value,x=rand_x,y=rand_y+(height/4)*i+(height/8),taken=false,width=#tostr(value)*4,height=6,object="score"})
 		end
 		-- bounding box
 		add(objects_table,{x=rand_x-8-(x_flag_shift* flags_offset)-width/2,y=rand_y,width=width,height=height,object="none"})
@@ -244,8 +253,10 @@ function draw_objects()
 		if debug_show_hitboxes then
 			print(i,objects_table[i].x,objects_table[i].y-10,7)
 			--if objects_table[i].object == "none" then
-				local obj = objects_table[i]
-				rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
+			local obj = objects_table[i]
+			rect(obj.x,obj.y,obj.x+obj.width,obj.y+obj.height)
+			local player_box = get_player_bounding_box()
+			rect(player_box.x,player_box.y,player_box.x+player_box.width,player_box.y+player_box.height)
 		end
 	end
 end

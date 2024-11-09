@@ -119,8 +119,10 @@ function draw_skier()
 end
 
 function debug_move_skier()
-	if (btn(⬅️)) p_x-=debug_speed
-	if (btn(➡️)) p_x+=debug_speed
-	if (btn(⬇️)) p_y+=debug_speed
-	if (btn(⬆️)) p_y-=debug_speed
+	local speed = debug_speed
+	if (btn(🅾️)) speed = 0.5 
+	if (btn(⬅️)) p_x-=speed
+	if (btn(➡️)) p_x+=speed
+	if (btn(⬇️)) p_y+=speed
+	if (btn(⬆️)) p_y-=speed
 end

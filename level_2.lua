@@ -1,14 +1,11 @@
 function level_2_init()
 	if not level_2_inited then
-		--amount_of_scoring_areas = 100
-		--amount_of_obstacles = 200
-		--amount_of_ice = 30
 		amount_of_scoring_areas = 0
-		amount_of_obstacles = 0
-		amount_of_ice = 0
-		amount_of_flag_areas = 50
-		--amount_of_ice = 200
-		--amount_of_obstacles = 1500
+		amount_of_obstacles = 150
+		amount_of_ice = 30
+		amount_of_scoring_areas = 0
+		amount_of_small_flag_areas = 50
+		amount_of_big_flag_areas = 25 
 		generate_objects()
 		level_2_inited = true
 	end

@@ -11,9 +11,14 @@ function generate_objects()
 		generate_scoring_area()
 	end
 	
-	-- generate flag areas
-	for i=1,amount_of_flag_areas do
-		generate_flag_area()
+	-- generate small flag areas
+	for i=1,amount_of_small_flag_areas do
+		generate_small_flag_area()
+	end
+
+	-- generate big flag areas
+	for i=1,amount_of_big_flag_areas do
+		generate_big_flag_area()
 	end
 
 	-- generate obstacles
@@ -74,7 +79,26 @@ function generate_scoring_area()
 	add(objects_table,{sprite=sprite_2,x=end_x,y=rand_y-8+rnd(4),width=16,height=16,object="obstacle"})
 end
 
-function generate_flag_area()
+function generate_small_flag_area()
+	possible_point_values = {100, 200, 300}
+	value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
+	repeat
+		width = 62
+		height = 75
+		rand_x, rand_y = generate_rand_x_and_y_coords()
+		-- bounding box
+		bounding_box = {x=rand_x,y=rand_y,width=width,height=height,object="none"}
+		generate = check_generation_collision(bounding_box)
+	until generate
+
+	add(objects_table, bounding_box)
+	blue = flr(rnd(2))
+	add(objects_table,{value=-100,blue=blue,x=rand_x,y=rand_y+(height/2)-8,taken=false,width=12,height=12,object="flag"})
+	add(objects_table,{value=-100,blue=blue,x=rand_x+50,y=rand_y+(height/2)-8,taken=false,width=12,height=12,object="flag"})
+	add(objects_table,{value=value,x=rand_x+23,y=rand_y+(height/2)-5,taken=false,width=#tostr(value)*4,height=6,object="score"})
+end
+
+function generate_big_flag_area()
 	possible_point_values = {100, 200, 500}
 	value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
 	repeat

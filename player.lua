@@ -5,6 +5,8 @@ function move_skier()
 		score += 1
 		score_checkpoint = p_y - 40
 	end
+	
+	if (score < 0) score = 0
 
 	if btn(🅾️) then
 		started_skiing = true

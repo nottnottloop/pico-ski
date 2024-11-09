@@ -39,7 +39,7 @@ function check_collisions()
 
 		-- score objects
 		if objects_table[i].object == "score" then
-			if (not objects_table[i].taken) and (abs(p_y-objects_table[i].y) < 100) then
+			if not objects_table[i].taken then
 				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
 					score += objects_table[i].value
 					sfx(0)
@@ -57,12 +57,16 @@ function check_collisions()
 			--end
 		end
 		
-		-- test regular bb
-		if objects_table[i].object == "none" then
+		-- flags
+		if objects_table[i].object == "flag" then
 			--if abs(p_y-objects_table[i].y) < 100 then
+			if not objects_table[i].taken then
 				if check_bounding_boxes(get_player_bounding_box(), objects_table[i]) then
-					collide()
+					score += objects_table[i].value
+					sfx(1)
+					objects_table[i].taken = true
 				end
+			end
 			--end
 		end
 	end
@@ -175,7 +179,11 @@ function draw_objects()
 	
 		-- flags
 		if objects_table[i].object == "flag" then
-			sspr(32+16*objects_table[i].green,32,16,16,objects_table[i].x,objects_table[i].y,objects_table[i].width,objects_table[i].height)
+			flag_knocked_offset = objects_table[i].taken and 16 or 0
+			sspr(32+16*objects_table[i].blue,32+flag_knocked_offset,16,16,objects_table[i].x,objects_table[i].y,objects_table[i].width,objects_table[i].height)
+			if objects_table[i].taken then
+				print(objects_table[i].value,objects_table[i].x+10,objects_table[i].y-30,8)
+			end
 		end
 	
 		-- ice

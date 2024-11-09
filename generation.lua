@@ -50,21 +50,22 @@ function generate_flag_area()
 	value = possible_point_values[flr(rnd(#possible_point_values)) + 1]
 	repeat
 		flags_offset = flr(rnd(2))
-		x_flag_shift = 15 * flags_offset
+		x_flag_shift = 10 * flags_offset
 		width = (x_flag_shift * 2) + 16 + 50
-		height = 200
+		height = flags_offset == 0 and 250 or 200
 		rand_x, rand_y = generate_rand_x_and_y_coords()
 		-- bounding box
-		bounding_box = {x=rand_x-8-(x_flag_shift* flags_offset)-width/2,y=rand_y,width=width,height=height,object="none"}
+		bounding_box = {x=rand_x-width/2,y=rand_y,width=width,height=height,object="none"}
 		generate = check_generation_collision(bounding_box)
 	until generate
 
 	add(objects_table, bounding_box)
-	for i=1,4 do
+	for i=0,3 do
 		if (i%2==0) shift_direction = -1 else shift_direction=1
-		local final_x_shift = x_flag_shift * (-1*flags_offset*shift_direction)
-		add(objects_table,{value=-100,green=i%2,x=rand_x+final_x_shift,y=rand_y+(height/4)*i,taken=false,width=12,height=12,object="flag"})
-		add(objects_table,{value=value,x=rand_x,y=rand_y+(height/4)*i+(height/8),taken=false,width=#tostr(value)*4,height=6,object="score"})
+		local final_x_shift = x_flag_shift * (-1*flags_offset*shift_direction) - 8
+		local y_downard_shift = 10
+		add(objects_table,{value=-100,blue=i%2,x=rand_x+final_x_shift,y=rand_y+y_downard_shift+(height/4)*i,taken=false,width=12,height=12,object="flag"})
+		add(objects_table,{value=value,x=rand_x-8,y=rand_y+y_downard_shift+(height/4)*i+(height/8),taken=false,width=#tostr(value)*4,height=6,object="score"})
 	end
 end
 

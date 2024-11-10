@@ -2,7 +2,7 @@ function _init()
 	-- menu, transition, level_1, level_2, game_over
 	game_state = "menu"
 	--game_state="menu"
-	high_score = 0
+	high_score =  31000
 
 	score = 0
 	score_checkpoint = 0

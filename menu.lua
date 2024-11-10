@@ -1,5 +1,5 @@
 function menu_update()
-	camera()
+	reset_camera()
 	if (btnp(🅾️)) then
 		level_1_init()
 		game_state = "level_1"
@@ -8,5 +8,5 @@ end
 
 function menu_draw()
 	cls()
-	print("menu")
+	draw_hud(false)
 end

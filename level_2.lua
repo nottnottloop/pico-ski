@@ -40,7 +40,7 @@ function level_2_draw()
 	-- skier
 	draw_skier()
 
-	draw_time_display()
+	draw_hud(true)
 	draw_messages()
 	
 	-- debug

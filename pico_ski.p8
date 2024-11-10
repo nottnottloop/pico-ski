@@ -6,7 +6,7 @@ __lua__
 #include main.lua
 #include states.lua
 #include draw.lua
-#include time.lua
+#include hud.lua
 #include generation.lua
 #include player.lua
 #include collisions.lua

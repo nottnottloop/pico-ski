@@ -1,5 +1,5 @@
 function transition_update()
-	camera()
+	reset_camera()
 end
 
 function transition_draw()

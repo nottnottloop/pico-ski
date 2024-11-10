@@ -8,6 +8,12 @@ function update_camera()
 	camera(c_x,c_y)
 end
 
+function reset_camera()
+	camera()
+	c_x = 0
+	c_y = 0
+end
+
 function debug_local_file_save(obj, fields, name)
 	printh(nil, name, true)
 	for i=1,#fields do

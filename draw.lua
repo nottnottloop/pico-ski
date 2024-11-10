@@ -6,6 +6,11 @@ function draw_boundary_trees()
 			spr(3,(-j*16)+tree_offset,tree_checkpoint-(i*16),2,2)
 		end
 	end
+	for i=0,22 do
+		for j=0,4 do
+			spr(3,-48+(i*16)-tree_offset/2,-length_of_level-(j*16),2,2)
+		end
+	end
 end
 
 function draw_objects()
@@ -52,7 +57,7 @@ function draw_objects()
 end
 
 function draw_messages()
-	if not started_skiing and not debug_movement then
+	if not started_skiing and not freeze_player and not debug_movement then
 		start_skiing_message = "press 🅾️ to ski"
 		print(start_skiing_message,63+c_x-#start_skiing_message*2,100+c_y,7)
 	end

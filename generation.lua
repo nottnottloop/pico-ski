@@ -1,4 +1,6 @@
 function generate_objects()
+	-- empty objects table on next level load
+	objects_table = {}
 	--add(objects_table,{sprite=5,x=0,y=0})
 	--add(objects_table,{value=100,x=0,y=-50,taken=false})
 	
@@ -34,7 +36,7 @@ end
 
 function generate_rand_x_and_y_coords()
 	local rand_x = flr(rnd((tree_offset*2)-160))-tree_offset+80
-	local rand_y = -flr(rnd(length_of_level-300))-150
+	local rand_y = -flr(rnd(length_of_level-350))-150
 	return rand_x, rand_y
 end
 

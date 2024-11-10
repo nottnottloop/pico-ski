@@ -111,6 +111,7 @@ function draw_skier()
 	skier_sprite = 39
 	if abs(turning_progress) >= turning_limit then
 		skier_sprite += 4
+		sfx(2)
 	elseif abs(turning_progress) >= turning_limit / 2 then
 		skier_sprite += 2
 	end

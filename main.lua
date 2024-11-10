@@ -1,19 +1,24 @@
 function _init()
 	-- menu, transition, level_1, level_2, game_over
-	game_state = "level_2"
+	game_state = "menu"
 	--game_state="menu"
 	high_score = 0
 
 	score = 0
 	score_checkpoint = 0
+
+	clock_active = true
 	time_limit = 150
 	elapsed_time = 0
 	minutes_display = 0
 	seconds_display = 0
 	milliseconds_display = 0
 	
-	p_x = 0
-	p_y = 0 
+	player_x_start = 0
+	player_y_start = -5000
+	player_y_start = 0
+	p_x = player_x_start
+	p_y = player_y_start
 	c_x = 0
 	c_y = 0
 	camera_jerk_cap = 24
@@ -21,6 +26,10 @@ function _init()
 	c_jerk_x = 0
 	c_jerk_y = 0
 	
+	freeze_player = false
+	ended_level_timer = 0
+	next_level_start_delay = 2
+
 	started_skiing = false
 	original_normal_speed = 2.75
 	normal_speed = original_normal_speed
@@ -40,13 +49,10 @@ function _init()
 	turning_progress = 0
 	turning_limit = 0.1
 
-	level_1_inited = false
-	level_2_inited = false
-	
 	tree_checkpoint = p_y
 	tree_offset = 256
 	
-	length_of_level = 9000
+	length_of_level = 7000
 	
 	objects_table = {}
 	amount_of_obstacles = 0
@@ -55,10 +61,10 @@ function _init()
 	colliding = false
 
 	debug_movement = false
-	draw_debug_print = true
+	draw_debug_print = false
 	debug_speed = 5
 	debug_printed = false
-	debug_collision = true
+	debug_collision = false
 	debug_show_hitboxes = false
 end
 

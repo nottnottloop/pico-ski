@@ -78,6 +78,7 @@ function collide()
 		if (not respawn_player and not trees_collide) p_y += 30
 		if (p_y > 0) p_y = 0
 		until respawn_player
+		sfx(3)
 		started_skiing = false
 		turning_progress = 0
 		elapsed_time += 10
